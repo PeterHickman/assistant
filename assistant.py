@@ -79,7 +79,7 @@ WAITING = 'waiting'
 LISTENING = 'listening'
 
 state = WAITING
-last_utterance = 0
+last_utterance = get_ts()
 
 while True:
     if listen.listen():
@@ -100,7 +100,7 @@ while True:
                 speak.say(response.respond(text))
                 last_utterance = get_ts()
 
-    if get_ts() - last_utterance > settings.timeout:
+    if get_ts() - last_utterance > settings.timeout and state == LISTENING:
         speak.say(settings.goodbye)
         state = WAITING
 
