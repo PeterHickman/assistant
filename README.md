@@ -2,9 +2,11 @@
 
 When everybody and their dog is creating voice controlled assistants I wanted in. And I don't even own a dog!
 
-A have a thing for offline applications, I know that there are some excellent free online tts and stt services but I wanted an offline one. I spent hours battling [CLU Sphinx](https://cmusphinx.github.io/) to get it to work on my Mac only to give up as it was a complete pain. Then I found out about [Vosk](https://github.com/alphacep/vosk-api) and my interest was reignited
+I have a thing for offline applications, I know that there are some excellent free online tts and stt services but I wanted an offline one. I spent hours battling [CLU Sphinx](https://cmusphinx.github.io/) to get it to work on my Mac only to give up as it was a complete pain. Then I found out about [Vosk](https://github.com/alphacep/vosk-api) and my interest was reignited
 
 I mostly work on a Macintosh so this is where most of the work is being done, next I try to get it to work on Linux (specifically Zorin) and I hope to get it running on a Raspberry Pi
+
+My Macintosh environment is old and crusty (unlike my Linux environment which was a fresh install) and so might already have a bunch of dependencies already installed that are not listed here. Unlike on Linux where I had a fresh install so anything that was needed caused the setup to fail
 
 ## Setting up on a Macintosh
 
