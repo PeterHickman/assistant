@@ -10,10 +10,11 @@ plat = platform.system()
 
 if plat == 'Darwin':
     from speak_macos import Speak
-    voice = 'com.apple.voice.compact.en-GB.Daniel'
 else:
     print("Don't know how to set up for {}".format(plat))
     sys.exit(1)
+
+import settings
 
 from vosk import Model, KaldiRecognizer
 import pyaudio
@@ -67,22 +68,15 @@ def get_ts():
     time_stamp = calendar.timegm(current_GMT)
     return time_stamp
     
-listen = Listen("./models/vosk-model-small-en-us-0.15", 1)
-speak = Speak(voice)
+listen = Listen(settings.model, settings.input_device_index)
+speak = Speak(settings.voice)
 response = Response()
 
-speak.say("Ready for you now")
-
-# Trigger words
-WAKE_UP = 'hello'
-GO_TO_SLEEP = 'goodbye'
+speak.say(settings.greeting)
 
 # Listening state
 WAITING = 'waiting'
 LISTENING = 'listening'
-
-# TImeout after nothing being said for X seconds
-TIMEOUT = 30
 
 state = WAITING
 last_utterance = 0
@@ -92,17 +86,17 @@ while True:
         text = listen.result()
 
         if state == WAITING:
-            if text == WAKE_UP:
-                speak.say('hanging on your every word')
+            if text == settings.wake_up_word:
+                speak.say(settings.ready)
                 state = LISTENING
                 last_utterance = get_ts()
         elif state == LISTENING:
-            if text == GO_TO_SLEEP:
-                speak.say("nice chatting with you, till next time")
+            if text == settings.sleep_word:
+                speak.say(settings.goodbye)
                 state = WAITING
             elif text == '': # Nothing is said
-                if get_ts() - last_utterance > TIMEOUT:
-                    speak.say("Timeout")
+                if get_ts() - last_utterance > settings.timeout:
+                    speak.say(settings.goodbye)
                     state = WAITING
             else:
                 speak.say(response.respond(text))
