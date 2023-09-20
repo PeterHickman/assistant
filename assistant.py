@@ -95,10 +95,12 @@ while True:
                 speak.say(settings.goodbye)
                 state = WAITING
             elif text == '': # Nothing is said
-                if get_ts() - last_utterance > settings.timeout:
-                    speak.say(settings.goodbye)
-                    state = WAITING
+                pass
             else:
                 speak.say(response.respond(text))
                 last_utterance = get_ts()
+
+    if get_ts() - last_utterance > settings.timeout:
+        speak.say(settings.goodbye)
+        state = WAITING
 
