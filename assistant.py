@@ -10,6 +10,8 @@ plat = platform.system()
 
 if plat == 'Darwin':
     from speak_macos import Speak
+elif plat == 'Linux':
+    from speak_linux import Speak
 else:
     print("Don't know how to set up for {}".format(plat))
     sys.exit(1)
@@ -64,9 +66,7 @@ class Response:
             return t
 
 def get_ts():
-    current_GMT = time.gmtime()
-    time_stamp = calendar.timegm(current_GMT)
-    return time_stamp
+    return calendar.timegm(time.gmtime())
     
 listen = Listen(settings.model, settings.input_device_index)
 speak = Speak(settings.voice)
