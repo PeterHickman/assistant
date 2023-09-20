@@ -1,6 +1,0 @@
-apt install python3.8-venv
-apt install python3-pip
-apt install portaudio19-dev
-apt install python3-pyaudio
-apt install python3-espeak
-
