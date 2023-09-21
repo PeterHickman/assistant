@@ -19,33 +19,8 @@ else:
 import settings
 
 from vosk import Model, KaldiRecognizer
-# import pyaudio
 import sounddevice
 import queue
-
-# class Listen:
-#     # https://alphacephei.com/vosk/models
-#
-#     def __init__(self, model, input_device_index):
-#         model = Model(model)
-#         self.recognizer = KaldiRecognizer(model, 16000)
-#         mic = pyaudio.PyAudio()
-#
-#         try:
-#             self.stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8192, input_device_index=input_device_index)
-#             self.stream.start_stream()
-#         except:
-#             print("Is your microphone plugged in?")
-#             sys.exit()
-#
-#     def listen(self):
-#         data = self.stream.read(4096)
-#         return self.recognizer.AcceptWaveform(data)
-#
-#     def result(self):
-#         text = self.recognizer.Result()
-#         data = json.loads(text)
-#         return data['text']
 
 class Listen:
     def __init__(self, model, input_device_index):
