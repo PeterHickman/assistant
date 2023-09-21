@@ -19,31 +19,54 @@ else:
 import settings
 
 from vosk import Model, KaldiRecognizer
-import pyaudio
+# import pyaudio
+import sounddevice
+import queue
+
+# class Listen:
+#     # https://alphacephei.com/vosk/models
+#
+#     def __init__(self, model, input_device_index):
+#         model = Model(model)
+#         self.recognizer = KaldiRecognizer(model, 16000)
+#         mic = pyaudio.PyAudio()
+#
+#         try:
+#             self.stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8192, input_device_index=input_device_index)
+#             self.stream.start_stream()
+#         except:
+#             print("Is your microphone plugged in?")
+#             sys.exit()
+#
+#     def listen(self):
+#         data = self.stream.read(4096)
+#         return self.recognizer.AcceptWaveform(data)
+#
+#     def result(self):
+#         text = self.recognizer.Result()
+#         data = json.loads(text)
+#         return data['text']
 
 class Listen:
-    # https://alphacephei.com/vosk/models
-
     def __init__(self, model, input_device_index):
-        model = Model(model)
-        self.recognizer = KaldiRecognizer(model, 16000)
-        mic = pyaudio.PyAudio()
-
-        try:
-            self.stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8192, input_device_index=input_device_index)
-            self.stream.start_stream()
-        except:
-            print("Is your microphone plugged in?")
-            sys.exit()
+        self.input_device_index = input_device_index
+        self.model = Model(model)
+        device = sounddevice.query_devices(input_device_index, "input")
+        self.samplerate = int(device['default_samplerate'])
+        self.q = queue.Queue()
+        self.rec = KaldiRecognizer(self.model, self.samplerate)
 
     def listen(self):
-        data = self.stream.read(4096)
-        return self.recognizer.AcceptWaveform(data)
+        with sounddevice.RawInputStream(samplerate=self.samplerate, blocksize=8192, device=self.input_device_index, dtype="int16", channels=1, callback=self._callback):
+            while True:
+                data = self.q.get()
+                if self.rec.AcceptWaveform(data):
+                    text = self.rec.Result()
+                    data = json.loads(text)
+                    return data['text']
 
-    def result(self):
-        text = self.recognizer.Result()
-        data = json.loads(text)
-        return data['text']
+    def _callback(self, indata, frames, time, status):
+        self.q.put(bytes(indata))
 
 class Response:
     def respond(self, text):
@@ -82,23 +105,22 @@ state = WAITING
 last_utterance = get_ts()
 
 while True:
-    if listen.listen():
-        text = listen.result()
+    text = listen.listen()
 
-        if state == WAITING:
-            if text == settings.wake_up_word:
-                speak.say(settings.ready)
-                state = LISTENING
-                last_utterance = get_ts()
-        elif state == LISTENING:
-            if text == settings.sleep_word:
-                speak.say(settings.goodbye)
-                state = WAITING
-            elif text == '': # Nothing is said
-                pass
-            else:
-                speak.say(response.respond(text))
-                last_utterance = get_ts()
+    if state == WAITING:
+        if text == settings.wake_up_word:
+            speak.say(settings.ready)
+            state = LISTENING
+            last_utterance = get_ts()
+    elif state == LISTENING:
+        if text == settings.sleep_word:
+            speak.say(settings.goodbye)
+            state = WAITING
+        elif text == '': # Nothing is said
+            pass
+        else:
+            speak.say(response.respond(text))
+            last_utterance = get_ts()
 
     if get_ts() - last_utterance > settings.timeout and state == LISTENING:
         speak.say(settings.goodbye)
