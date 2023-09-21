@@ -4,12 +4,8 @@
 # List all the available input sources and their index
 ##
 
-import pyaudio
+import sounddevice
 
-p = pyaudio.PyAudio()
-info = p.get_host_api_info_by_index(0)
-numdevices = info.get('deviceCount')
-
-for i in range(0, numdevices):
-    if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
-        print("{} - {}".format(i, p.get_device_info_by_host_api_device_index(0, i).get('name')))
+for device in sounddevice.query_devices(device=None, kind=None):
+    if device['max_input_channels'] > 0:
+        print("{} - {} ({} channels)".format(device['index'], device['name'], device['max_input_channels']))
