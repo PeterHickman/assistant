@@ -30,3 +30,21 @@ apt install python3-espeak
 
 I had to install these from a fresh install of Zorin, but had similar issues with Debian 12. Again `mics.py` will list your input sources and `voices_linux.py` will list the available voices
 
+## Running the assistant
+
+The first thing you will need to set up is the values in `settings.py` for what you have
+
+|Key|Value|
+|---|---|
+|`voice`|The voice to use when speaking. Pick the name from either `voices_macos.py` or `voices_linux.py`|
+|`model`|The path, absolute or relative, to the directory that the vosk model is in|
+|`input_device_index`|The id for your microphone. Find it from `mics.py`|
+|`wake_up_word`|The word or phrase to get the assistant to listen to you|
+|`sleep_word`|The word or phrase to get the assistant to stop listening|
+|`timeout`|The number of seconds to pass without a command before the assistant will stop listening|
+|`greeting`|Said once the application up and running and ready for use|
+|`ready`|The phrase the assistant will say to show that it has heard the wake up word|
+|`goodbye`|Said to confirm the sleep word was heard|
+
+And then run the application. Yeah it only recognises the two command `date` and `time`. The `Response` class is where you make the assistant do it's thing
+
