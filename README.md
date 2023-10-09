@@ -8,6 +8,8 @@ I mostly work on a Macintosh so this is where most of the work is being done, ne
 
 My Macintosh environment is old and crusty (unlike my Linux environment which was a fresh install) and so might already have a bunch of dependencies already installed that are not listed here. Unlike on Linux where I had a fresh install so anything that was needed caused the setup to fail
 
+Not wanting to downplay the excellent tts and stt packages and all the _magic_ they do behind the scene but this is simply stt and tts slapped on a chatbot (the `Response` class). Go wild
+
 ## Setting up on a Macintosh
 
 Best to run this with Python 3.8 in a venv. The requirements are in `requirements.macos.txt`. The `mics.py` script will list the various input sources available to you (if you have plugged them in) and the `voices_macos.py` script will list the available voices
