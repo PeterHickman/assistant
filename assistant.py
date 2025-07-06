@@ -21,6 +21,7 @@ import settings
 from vosk import Model, KaldiRecognizer
 import sounddevice
 import queue
+from colorist import Color
 
 class Listen:
     def __init__(self, model, input_device_index):
@@ -53,7 +54,8 @@ class Response:
             return 'Pardon'
 
     def _date(self):
-        return time.strftime("%a, %d %b %Y", time.gmtime())
+        t = time.strftime("%A, %d %B %Y", time.gmtime()).replace(' 0', ' ')
+        return t
 
     def _time(self):
         # leading zeros will be said so we need to remove them
@@ -84,17 +86,24 @@ while True:
 
     if state == WAITING:
         if text == settings.wake_up_word:
+            print(f"{Color.RED}You: {Color.OFF}{text}")
+            print(f"{Color.GREEN}Assistant: {Color.OFF}{settings.ready}")
             speak.say(settings.ready)
             state = LISTENING
             last_utterance = get_ts()
     elif state == LISTENING:
         if text == settings.sleep_word:
+            print(f"{Color.RED}You: {Color.OFF}{text}")
+            print(f"{Color.GREEN}Assistant: {Color.OFF}{settings.goodbye}")
             speak.say(settings.goodbye)
             state = WAITING
         elif text == '': # Nothing is said
             pass
         else:
-            speak.say(response.respond(text))
+            print(f"{Color.RED}You: {Color.OFF}{text}")
+            res = response.respond(text)
+            print(f"{Color.GREEN}Assistant: {Color.OFF}{res}")
+            speak.say(res)
             last_utterance = get_ts()
 
     if get_ts() - last_utterance > settings.timeout and state == LISTENING:

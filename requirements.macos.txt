@@ -4,3 +4,4 @@ PyAudio==0.2.14
 pyobjc==11.1
 vosk==0.3.44
 sounddevice==0.5.2
+colorist==1.8.4
