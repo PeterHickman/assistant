@@ -10,6 +10,8 @@ My Macintosh environment is old and crusty (unlike my Linux environment which wa
 
 Not wanting to downplay the excellent tts and stt packages and all the _magic_ they do behind the scene but this is simply stt and tts slapped on a chatbot (the `Response` class). Go wild
 
+**Now with added AI!!!!** The response class now calls Ollama when it cannot handle the request
+
 ## Setting up on a Macintosh
 
 Best to run this with Python 3.8 in a venv. The requirements are in `requirements.macos.txt`. The `mics.py` script will list the various input sources available to you (if you have plugged them in) and the `voices_macos.py` script will list the available voices
@@ -47,6 +49,7 @@ The first thing you will need to set up is the values in `settings.py` for what 
 |`greeting`|Said once the application up and running and ready for use|
 |`ready`|The phrase the assistant will say to show that it has heard the wake up word|
 |`goodbye`|Said to confirm the sleep word was heard|
+|`ollama_model`|The name of the model that you want ollama to use|
 
 And then run the application. Yeah it only recognises the two command `date` and `time`. The `Response` class is where you make the assistant do it's thing
 

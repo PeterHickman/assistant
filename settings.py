@@ -17,3 +17,6 @@ goodbye = 'nice chatting with you, till next time'
 
 # Timeout after nothing being said for X seconds
 timeout = 30
+
+# Ollama local settings
+ollama_model = 'llama3.2:latest'

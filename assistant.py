@@ -5,6 +5,8 @@ import time
 import sys
 import calendar
 import platform
+from ollama import chat
+from ollama import ChatResponse
 
 plat = platform.system()
 
@@ -51,7 +53,9 @@ class Response:
         elif text == 'time':
             return self._time()
         else:
-            return 'Pardon'
+            response = chat(model=settings.ollama_model, messages=[{'role': 'user', 'content': text,},])
+
+            return response.message.content
 
     def _date(self):
         t = time.strftime("%A, %d %B %Y", time.gmtime()).replace(' 0', ' ')

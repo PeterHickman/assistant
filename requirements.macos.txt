@@ -5,3 +5,4 @@ pyobjc==11.1
 vosk==0.3.44
 sounddevice==0.5.2
 colorist==1.8.4
+ollama==0.5.1
