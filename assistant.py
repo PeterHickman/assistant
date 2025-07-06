@@ -67,12 +67,18 @@ class Response:
 
 def get_ts():
     return calendar.timegm(time.gmtime())
-    
+
+def call_and_response(users, assistants):
+    if users != '':
+        print(f"{Color.RED}You: {Color.OFF}{users}")
+    print(f"{Color.GREEN}Assistant: {Color.OFF}{assistants}")
+    speak.say(assistants)
+
 listen = Listen(settings.model, settings.input_device_index)
 speak = Speak(settings.voice)
 response = Response()
 
-speak.say(settings.greeting)
+call_and_response('', settings.greeting)
 
 # Listening state
 WAITING = 'waiting'
@@ -86,27 +92,18 @@ while True:
 
     if state == WAITING:
         if text == settings.wake_up_word:
-            print(f"{Color.RED}You: {Color.OFF}{text}")
-            print(f"{Color.GREEN}Assistant: {Color.OFF}{settings.ready}")
-            speak.say(settings.ready)
+            call_and_response(text, settings.ready)
             state = LISTENING
             last_utterance = get_ts()
     elif state == LISTENING:
         if text == settings.sleep_word:
-            print(f"{Color.RED}You: {Color.OFF}{text}")
-            print(f"{Color.GREEN}Assistant: {Color.OFF}{settings.goodbye}")
-            speak.say(settings.goodbye)
+            call_and_response(text, settings.goodbye)
             state = WAITING
-        elif text == '': # Nothing is said
-            pass
-        else:
-            print(f"{Color.RED}You: {Color.OFF}{text}")
-            res = response.respond(text)
-            print(f"{Color.GREEN}Assistant: {Color.OFF}{res}")
-            speak.say(res)
+        elif text != '':
+            call_and_response(text, response.respond(text))
             last_utterance = get_ts()
 
     if get_ts() - last_utterance > settings.timeout and state == LISTENING:
-        speak.say(settings.goodbye)
+        call_and_response('', settings.goodbye)
         state = WAITING
 
